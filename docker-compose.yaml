@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+#  app:
+#    image: testtask-app:latest
+#    container_name: testTask_app
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres_db_test
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#    depends_on:
+#      - db
+#    networks:
+#      - testtask_network
+  db:
+    image: postgres:15
+    container_name: postgres_db_test
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres_db_test
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - testtask_network
+  redis:
+    image: redis:7
+    container_name: redis_test
+    ports:
+      - "6379:6379"
+    networks:
+      - testtask_network
+  pg-admin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_test
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - testtask_network
+    depends_on:
+      - db
+volumes:
+  postgres_data:
+  pgadmin_data:
+    driver: local
+networks:
+  testtask_network:
+    driver: bridge
