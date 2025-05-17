@@ -2,23 +2,24 @@ package com.example.testTask.api;
 
 import com.example.testTask.dto.PhoneData;
 import com.example.testTask.dto.requests.PhoneRequest;
-import com.example.testTask.dto.Users;
 import com.example.testTask.service.PhoneDataService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/phone")
 @AllArgsConstructor
+@Tag(name = "Phones", description = "User phone number management")
 public class PhoneDataController {
     private final PhoneDataService pds;
     @PostMapping
+    @Operation(summary = "Add phone number")
     public ResponseEntity<?> addPhone(@RequestBody PhoneRequest pr){
         try {
             Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -32,6 +33,7 @@ public class PhoneDataController {
     }
 
     @DeleteMapping
+    @Operation(summary = "Delete phone number. (You can't delete the only number)")
     public ResponseEntity<?> deletePhone (@RequestBody PhoneRequest pr){
         try {
             Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -45,6 +47,7 @@ public class PhoneDataController {
         }
     }
     @PatchMapping
+    @Operation(summary = "Change phone number")
     public ResponseEntity<?> changePhone(@RequestBody PhoneRequest pr) {
         try {
             Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

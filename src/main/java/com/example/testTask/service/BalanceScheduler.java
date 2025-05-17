@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class BalanceScheduler {
     private final AccountService as;
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRateString = "${balance.scheduler.fixedRate}")
     public void autoUpdateBalance(){
         as.applyBalanceGrowth();
     }

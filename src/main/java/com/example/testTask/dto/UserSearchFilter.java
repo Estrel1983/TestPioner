@@ -1,17 +1,28 @@
 package com.example.testTask.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDate;
-
-@Data
-@Builder
-public class UserSearchFilter {
-    private String name;
-    private String email;
-    private String phone;
-    private LocalDate dateOfBirth;
-    private int page;
-    private int size;
+public record UserSearchFilter(String name,
+                               String email,
+                               String phone,
+                               LocalDate dateOfBirth,
+                               Integer page,
+                               Integer size) {
+    public UserSearchFilter {
+        if (page == null || page < 0) {
+            page = 0;
+        }
+        if (size == null || size <= 0) {
+            size = 10;
+        }
+    }
+    @Override
+    public String toString(){
+        return "%s|%s|%s|%s|%d|%d".formatted(
+                name == null ? "":name,
+                email == null ? "":email,
+                phone == null ? "":phone,
+                dateOfBirth == null ? "":dateOfBirth,
+                page, size
+        );
+    }
 }

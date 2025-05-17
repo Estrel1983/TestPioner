@@ -35,4 +35,11 @@ public class Queries {
             FROM Account a
             WHERE a.user.id = :userId
             """;
+
+    //User
+    public static final String GET_USER_BY_ID_QUERY = """
+            SELECT u
+            FROM Users u
+            WHERE u.id = :id
+            """;
 }

@@ -1,11 +1,11 @@
 package com.example.testTask.api;
 
-import com.example.testTask.dao.UserDao;
 import com.example.testTask.dto.Users;
 import com.example.testTask.dto.requests.AuthRequest;
 import com.example.testTask.dto.response.AuthResponse;
 import com.example.testTask.service.AuthService;
 import com.example.testTask.service.JwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
+@Tag(name = "Authorisation")
 public class AuthController {
     private final AuthService as;
     private final JwtService js;

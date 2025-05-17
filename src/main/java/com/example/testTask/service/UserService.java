@@ -23,17 +23,17 @@ public class UserService {
 
     public List<Users> searchUsers(UserSearchFilter usf) {
         Users curUser = null;
-        if (usf.getEmail() != null)
-            curUser = emailDao.findUserByEmail(usf.getEmail()).orElse(null);
-        if (usf.getPhone() != null) {
-            Users checkingUser = phoneDao.findUserByPhone(usf.getPhone()).orElse(null);
+        if (usf.email() != null)
+            curUser = emailDao.findUserByEmail(usf.email()).orElse(null);
+        if (usf.phone() != null) {
+            Users checkingUser = phoneDao.findUserByPhone(usf.phone()).orElse(null);
             if (curUser != null && (checkingUser != null && !curUser.getId().equals(checkingUser.getId())))
                 return Collections.emptyList();
             curUser = checkingUser;
         }
         List<Users> curUseersList;
-        if (usf.getName() != null || usf.getDateOfBirth() != null) {
-            curUseersList = userDao.findUser(usf.getName(), usf.getDateOfBirth(), usf.getPage(), usf.getSize());
+        if (usf.name() != null || usf.dateOfBirth() != null) {
+            curUseersList = userDao.findUser(usf.name(), usf.dateOfBirth(), usf.page(), usf.size());
             if (curUser == null)
                 return curUseersList;
             Users finalCurUser = curUser;

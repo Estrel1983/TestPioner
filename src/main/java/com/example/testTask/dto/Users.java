@@ -11,7 +11,9 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "USERS")
-public class Users {
+public class Users implements Serializable{
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
