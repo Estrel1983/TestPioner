@@ -2,27 +2,30 @@ package com.example.testTask.api;
 
 import com.example.testTask.dto.*;
 import com.example.testTask.dto.requests.EmailRequest;
+import com.example.testTask.dto.response.EmailResponse;
 import com.example.testTask.service.EmailService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/email")
 @AllArgsConstructor
+@Tag(name = "E-mails", description = "User email number management")
 public class EmailController {
     private final EmailService es;
     @PostMapping
-    public ResponseEntity<?> addPhone(@RequestBody EmailRequest er){
+    @Operation(summary = "Add e-mail")
+    public ResponseEntity<?> addEmail(@RequestBody EmailRequest er){
         try {
             Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             EmailData newEmail = es.addEmail(userId, er.getNewEmail());
-            return ResponseEntity.status(HttpStatus.CREATED).body(newEmail);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new EmailResponse(newEmail));
         } catch (ValidationException ve) {
             return ResponseEntity.badRequest().body(ve.getMessage());
         } catch (RuntimeException re) {
@@ -31,7 +34,8 @@ public class EmailController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deletePhone (@RequestBody EmailRequest er){
+    @Operation(summary = "Delete e-mail. (You can't delete the only e-mail)")
+    public ResponseEntity<?> deleteEmail(@RequestBody EmailRequest er){
         try {
             Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (es.deleteEmail(userId, er.getOldEmail()))
@@ -44,7 +48,8 @@ public class EmailController {
         }
     }
     @PatchMapping
-    public ResponseEntity<?> changePhone(@RequestBody EmailRequest er) {
+    @Operation(summary = "Change email")
+    public ResponseEntity<?> changeEmail(@RequestBody EmailRequest er) {
         try {
             Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             boolean changed = es.changeEmail(userId, er.getNewEmail(), er.getOldEmail());

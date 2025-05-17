@@ -19,10 +19,15 @@ import java.util.Optional;
 public class EmailDao {
     @PersistenceContext
     private EntityManager em;
+    private final RedisTemplate<String, Users> redisTemplate;
 
     public Optional<Users> findUserByEmail(String email) {
         try {
+            Users cashedUser = redisTemplate.opsForValue().get(email);
+            if (cashedUser != null)
+                return Optional.of(cashedUser);
             Users user = (Users) em.createQuery(Queries.GET_USER_BY_EMAIL_QUERY).setParameter("email", email).getSingleResult();
+            redisTemplate.opsForValue().set(email, user);
             return Optional.of(user);
         } catch (NoResultException e) {
             return Optional.empty();
@@ -40,5 +45,6 @@ public class EmailDao {
 
     public void delete(EmailData emailData) {
         em.remove(emailData);
+        redisTemplate.delete(emailData.getEmail());
     }
 }
