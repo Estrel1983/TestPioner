@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,5 +47,25 @@ public class EmailDao {
     public void delete(EmailData emailData) {
         em.remove(emailData);
         redisTemplate.delete(emailData.getEmail());
+    }
+
+    @Transactional
+    public Users createUserForTest(String name, String password, LocalDate dob) {
+        Users newUser = new Users();
+        newUser.setDateOfBirth(dob);
+        newUser.setPassword(password);
+        newUser.setName(name);
+        em.persist(newUser);
+        em.flush();
+        return newUser;
+    }
+    @Transactional
+    public EmailData createEmailForTest(String email, Users user) {
+        EmailData emailData = new EmailData();
+        emailData.setEmail(email);
+        emailData.setUser(user);
+        em.persist(emailData);
+        em.flush();
+        return emailData;
     }
 }

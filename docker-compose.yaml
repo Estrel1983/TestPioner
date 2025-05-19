@@ -2,6 +2,8 @@ version: '3.8'
 
 services:
   app:
+    profiles:
+      - app
     image: testtask-app:latest
     container_name: testTask_app
     build:
@@ -15,6 +17,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
       - db
+      - redis
     networks:
       - testtask_network
   db:
@@ -28,6 +31,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
     networks:
       - testtask_network
   redis:
